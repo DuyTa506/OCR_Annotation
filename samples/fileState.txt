@@ -1,0 +1,5 @@
+E:\AI_Project\OCR_Annotation\samples\ER_morong.png	1
+E:\AI_Project\OCR_Annotation\samples\DFD_henxui.jpg	1
+E:\AI_Project\OCR_Annotation\samples\er_dinhcao.png	1
+E:\AI_Project\OCR_Annotation\samples\ER_hanche.png	1
+E:\AI_Project\OCR_Annotation\samples\ER_kinhdien.png	1
