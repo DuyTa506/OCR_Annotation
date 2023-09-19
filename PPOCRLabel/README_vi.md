@@ -39,6 +39,14 @@ cd ./PPOCRLabel # Change the directory to the PPOCRLabel folder
 pyrcc5 -o libs/resources.py resources.qrc
 python PPOCRLabel.py --lang vi
 ```
+để đơn giản hơn , sau khi cài PaddlePaddle, hãy clone repository này của tôi về và chạy :
+
+[PPOCRLabel-fixed](https://github.com/DuyTa506/OCR_Annotation.git)
+
+```
+cd ./PPOCRLabel # Change the directory to the PPOCRLabel folder
+python PPOCRLabel.py --lang vi
+```
 
 #### Ubuntu Linux
 
