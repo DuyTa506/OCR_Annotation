@@ -4,18 +4,19 @@ English | [简体中文](README_ch.md)
 
 PPOCRLabelv2 is a semi-automatic graphic annotation tool suitable for OCR field, with built-in PP-OCR model to automatically detect and re-recognize data. It is written in Python3 and PyQT5, supporting rectangular box, table, irregular text and key information annotation modes. Annotations can be directly used for the training of PP-OCR detection and recognition models.
 
-| regular text annotation                              | table annotation                                       |
+|               regular text annotation               |                table annotation                |
 | :-------------------------------------------------: | :--------------------------------------------: |
-| <img src="./data/gif/steps_en.gif" width="80%"/>    | <img src="./data/gif/table.gif" width="100%"/> |
-| **irregular text annotation**                        | **key information annotation**                               |
-| <img src="./data/gif/multi-point.gif" width="80%"/> | <img src="./data/gif/kie.gif" width="300%"/>   |
+|  <img src="./data/gif/steps_en.gif" width="80%"/>   | <img src="./data/gif/table.gif" width="100%"/> |
+|            **irregular text annotation**            |         **key information annotation**         |
+| <img src="./data/gif/multi-point.gif" width="80%"/> |  <img src="./data/gif/kie.gif" width="100%"/>  |
 
 ### Recent Update
 
 - 2022.05: Add table annotations, follow `2.2 Table Annotations` for more information （by [whjdark](https://github.com/peterh0323); [Evezerest](https://github.com/Evezerest))
 - 2022.02:（by [PeterH0323](https://github.com/peterh0323) ）
   - Add KIE Mode by using `--kie`, for [detection + identification + keyword extraction] labeling.
-  - Improve user experience: support using `C` or `X` to rotate box, prompt for the number of files and labels, optimize interaction.
+  - Improve user experience: prompt for the number of files and labels, optimize interaction, and fix bugs such as only use CPU when inference
+  - New functions: Support using `C` or `X` to rotate box.
 - 2021.11.17:
   - Support install and start PPOCRLabel through the whl package (by [d2623587501](https://github.com/d2623587501))
   - Dataset segmentation: Divide the annotation file into training, verification and testing parts (refer to section 3.5 below, by [MrCuiHao](https://github.com/MrCuiHao))
@@ -102,11 +103,11 @@ python PPOCRLabel.py --kie True # [KIE mode] for [detection + recognition + keyw
 ```
 
 #### 1.2.3 Build and Install the Whl Package Locally
-Compile and install a new whl package, where 1.0.2 is the version number, you can specify the new version in 'setup.py'.
+Compile and install a new whl package, where 0.0.0 is the version number, you can specify the new version in 'setup.py'.
 ```bash
-cd PaddleOCR/PPOCRLabel
+cd ./PPOCRLabel
 python3 setup.py bdist_wheel
-pip3 install dist/PPOCRLabel-1.0.2-py2.py3-none-any.whl
+pip3 install dist/PPOCRLabel-0.0.0-py2.py3-none-any.whl
 ```
 
 
@@ -145,14 +146,18 @@ In PPOCRLabel, complete the text information labeling (text and position), compl
 labeling in the Excel file, the recommended steps are:
 
 1. Table annotation: After opening the table picture, click on the `Table Recognition` button in the upper right corner of PPOCRLabel, which will call the table recognition model in PP-Structure to automatically label 
-the table and pop up Excel at the same time.
-   
+    the table and pop up Excel at the same time.
+
 2. Change the recognition result: **label each cell** (i.e. the text in a cell is marked as a box). Right click on the box and click on `Cell Re-recognition`. 
    You can use the model to automatically recognise the text within a cell.
-   
+
 3. Mark the table structure: for each cell contains the text, **mark as any identifier (such as `1`) in Excel**, to ensure that the merged cell structure is same as the original picture.
 
-4. Export JSON format annotation: close all Excel files corresponding to table images, click `File`-`Export table JSON annotation` to obtain JSON annotation results.
+	> Note: If there are blank cells in the table, you also need to mark them with a bounding box so that the total number of cells is the same as in the image.
+
+4. ***Adjust cell order:*** Click on the menu  `View` - `Show Box Number` to show the box ordinal numbers, and drag all the results under the 'Recognition Results' column on the right side of the software interface to make the box numbers are arranged from left to right, top to bottom
+
+5. Export JSON format annotation: close all Excel files corresponding to table images, click `File`-`Export table JSON annotation` to obtain JSON annotation results.
 
 ### 2.3 Note
 
@@ -206,7 +211,7 @@ the table and pop up Excel at the same time.
 - Model language switching: Changing the built-in model language is supportable by clicking "PaddleOCR"-"Choose OCR Model" in the menu bar. Currently supported languages​include French, German, Korean, and Japanese.
   For specific model download links, please refer to [PaddleOCR Model List](https://github.com/PaddlePaddle/PaddleOCR/blob/develop/doc/doc_en/models_list_en.md#multilingual-recognition-modelupdating)
 
-- **Custom Model**: If users want to replace the built-in model with their own inference model, they can follow the [Custom Model Code Usage](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.3/doc/doc_en/whl_en.md#31-use-by-code) by modifying PPOCRLabel.py for [Instantiation of PaddleOCR class](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.5/PPOCRLabel/PPOCRLabel.py#L97) :
+- **Custom Model**: If users want to replace the built-in model with their own inference model, they can follow the [Custom Model Code Usage](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.3/doc/doc_en/whl_en.md#31-use-by-code) by modifying PPOCRLabel.py for [Instantiation of PaddleOCR class](https://github.com/PaddlePaddle/PaddleOCR/blob/dygraph/PPOCRLabel/PPOCRLabel.py#L86) :
 
   add parameter `det_model_dir`  in `self.ocr = PaddleOCR(use_pdserving=False, use_angle_cls=True, det=True, cls=True, use_gpu=gpu, lang=lang) `
 
@@ -222,14 +227,7 @@ PPOCRLabel supports three ways to export Label.txt
 
 - Close application export
 
-
-### 3.4 Export Partial Recognition Results
-
-For some data that are difficult to recognize, the recognition results will not be exported by **unchecking** the corresponding tags in the recognition results checkbox. The unchecked recognition result is saved as `True` in the `difficult` variable in the label file `label.txt`.
-
-> *Note: The status of the checkboxes in the recognition results still needs to be saved manually by clicking Save Button.*
-
-### 3.5 Dataset division
+### 3.4 Dataset division
 
 - Enter the following command in the terminal to execute the dataset division script:
 
@@ -258,7 +256,7 @@ For some data that are difficult to recognize, the recognition results will not 
     | ...
   ```
   
-### 3.6 Error message
+### 3.5 Error message
 
 - If paddleocr is installed with whl, it has a higher priority than calling PaddleOCR class with paddleocr.py, which may cause an exception if whl package is not updated.
 
