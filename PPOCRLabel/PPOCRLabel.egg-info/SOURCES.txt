@@ -1,0 +1,12 @@
+PPOCRLabel.py
+README.md
+__init__.py
+gen_ocr_train_val_test.py
+setup.cfg
+setup.py
+PPOCRLabel.egg-info/PKG-INFO
+PPOCRLabel.egg-info/SOURCES.txt
+PPOCRLabel.egg-info/dependency_links.txt
+PPOCRLabel.egg-info/entry_points.txt
+PPOCRLabel.egg-info/requires.txt
+PPOCRLabel.egg-info/top_level.txt
