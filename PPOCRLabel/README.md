@@ -1,4 +1,4 @@
-English | [简体中文](README_ch.md)
+English | [Vietnamese](README_vi.md)
 
 # PPOCRLabelv2
 
