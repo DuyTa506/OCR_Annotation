@@ -1,0 +1,5 @@
+paddlepaddle -i https://mirror.baidu.com/pypi/simple
+pyqt5
+paddleocr
+xlrd==1.2.0
+trash-cli

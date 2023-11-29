@@ -1,0 +1,1 @@
+docker run -it --privileged -e DISPLAY=$DISPLAY -u qtuser -v /tmp/.X11-unix:/tmp/.X11-unix ocr:v1 /bin/bash
